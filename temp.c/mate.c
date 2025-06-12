@@ -2,7 +2,7 @@
 #include "mate.h"
 
 i32 main(/* i32 argc, char *argv[] */) {
-  CreateConfig((MateOptions){.compiler = CLANG});
+  CreateConfig((MateOptions){.compiler = GCC});
   StartBuild(); {
     Executable exe = CreateExecutable(
       (ExecutableOptions){
