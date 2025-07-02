@@ -10,9 +10,7 @@
 #include "utils.h"
 #include "config.h"
 #include "shader.h"
-#include "texture.h"
-
-#define PI 3.14159265358979323846264338327950288
+// #include "texture.h"
 
 void framebuffer_size_callback(GLFWwindow *window, i32 width, i32 height) {
   glViewport(0, 0, width, height);
@@ -37,7 +35,7 @@ i32 main(/* i32 argc, char *argv[] */) {
 
   glfwWindowHint(GLFW_RESIZABLE, false);
 
-  GLFWwindow *window = glfwCreateWindow(HEI, WID, TITLE, NULL, NULL);
+  GLFWwindow *window = glfwCreateWindow(WID, HEI, TITLE, NULL, NULL);
   if (!window) {
     printf("failed to create window\n");
     return -1;
@@ -59,17 +57,55 @@ i32 main(/* i32 argc, char *argv[] */) {
   glUseProgram(shader);
   shaderSrcFree(&shaderSrc);
 
-  f32 verticies[] = {
+  /* f32 verticies[] = {
 //  | pos                | col              | tex
-    -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, 
-    -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 0.0f,  0.0f, 1.0f, 
-     0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 1.0f, 
-     0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,  1.0f, 0.0f, 
+    -0.5f, -0.5f, 0.0f,  1.0f, 1.0f, 1.0f,  0.0f, 0.0f, 
+    -0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 1.0f,  0.0f, 1.0f, 
+     0.5f,  0.5f, 0.0f,  1.0f, 1.0f, 1.0f,  1.0f, 1.0f, 
+     0.5f, -0.5f, 0.0f,  1.0f, 1.0f, 1.0f,  1.0f, 0.0f, 
+  }; */
+
+  f32 verticies[] = {
+//  | pos                 | tex
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 
+    
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 
+     0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 
+    
+     0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 
+     0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 
+    
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 
+    -0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 
+    -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 
+    
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 
+    
+     0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 
+     0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 
+    -0.5f, -0.5f,  0.5f,  1.0f, 1.0f, 
+    -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 
+    
   };
 
   u32 indicies[] = {
-    0, 1, 2,
-    2, 0, 3,
+    0, 1, 2, 2, 3, 0,
+    4, 5, 6, 6, 7, 5,
+    8, 9, 10, 10, 11, 8,
+    12, 13, 14, 14, 15, 12,
+    16, 17, 18, 18, 19, 16,
+    20, 21, 22, 22, 23, 20,
   };
 
   u32 VAO, VBO, EBO;
@@ -82,13 +118,13 @@ i32 main(/* i32 argc, char *argv[] */) {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
   {
-    u8 sov = 8 * sizeof(f32);
-    glVertexAttribPointer(0, 3, GL_FLOAT, false, sov, (void*)0);
+    u8 spv = 5 * sizeof(f32);
+    glVertexAttribPointer(0, 3, GL_FLOAT, false, spv, (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, false, sov, (void*)(3 * sizeof(f32)));
+    // glVertexAttribPointer(1, 3, GL_FLOAT, false, sov, (void*)(3 * sizeof(f32)));
+    // glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, false, spv, (void*)(3 * sizeof(f32)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, false, sov, (void*)(6 * sizeof(f32)));
-    glEnableVertexAttribArray(2);
   }
   glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
@@ -125,13 +161,23 @@ i32 main(/* i32 argc, char *argv[] */) {
   stbi_image_free(data);
 
   glUniform1i(glGetUniformLocation(shader, "texture0"), 0);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture0);
   glUniform1i(glGetUniformLocation(shader, "texture1"), 1);
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, texture1);
 
   defer {
     glDeleteTextures(1, &texture0);
     glDeleteTextures(1, &texture1);
   };
 
+  i32
+    modelLoc = glGetUniformLocation(shader, "model"),
+    viewLoc = glGetUniformLocation(shader, "view"),
+    projectionLoc = glGetUniformLocation(shader, "projection");
+
+  glEnable(GL_DEPTH_TEST);
   // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   while (!glfwWindowShouldClose(window)) {
@@ -139,20 +185,28 @@ i32 main(/* i32 argc, char *argv[] */) {
     processInput(window);
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUniform4f(
       glGetUniformLocation(shader, "uCol"),
-      cos(time)/2+.5,
-      cos(time-PI/2)/2+.5,
-      cos(time-PI/1)/2+.5,
+      cos(time)/2+0.5f,
+      cos(time-PI/2)/2+0.5f,
+      cos(time-PI/1)/2+0.5f,
       1.0f
     );
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture0);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture1);
+    mat4
+      model = GLM_MAT4_IDENTITY_INIT,
+      view = GLM_MAT4_IDENTITY_INIT,
+      projection = GLM_MAT4_IDENTITY_INIT;
+    glm_rotate(model, time * PI/2, (vec3){1, 1, 1});
+    glm_translate(view, (vec3){0, 0, -3.0f});
+    glm_scale_uni(view, (1.0f));
+    glm_perspective(PI/4, (float)WID/HEI, 0.1f, 100.0f, projection);
+    glUniformMatrix4fv(modelLoc, 1, false, model[0]);
+    glUniformMatrix4fv(viewLoc, 1, false, view[0]);
+    glUniformMatrix4fv(projectionLoc, 1, false, projection[0]);
+
 
     glDrawElements(GL_TRIANGLES, sizeof(indicies)/sizeof(u32), GL_UNSIGNED_INT, 0);
 

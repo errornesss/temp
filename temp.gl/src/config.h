@@ -1,6 +1,6 @@
 #pragma once
 
-#define HEI 640
-#define WID 480
+#define WID 640
+#define HEI 480
 #define TITLE "temp.gl"
 
