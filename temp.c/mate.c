@@ -10,7 +10,9 @@ i32 main(/* i32 argc, char *argv[] */) {
         .flags = "-std=c99 -Wall -Werror",
       }
     );
+
     AddFile(exe, "./src/main.c");
+
     InstallExecutable(exe);
     RunCommand(exe.outputPath);
   } EndBuild();
