@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-#include "base.h"
+#include "../base.h"
 
-i32 main(/* i32 argc, char *argv[] */) {
+i32 main(/* i32 argc, char **argv */) {
   printf("hello world\n");
   return 0;
 }
